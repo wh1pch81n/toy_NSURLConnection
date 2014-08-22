@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -16,18 +16,48 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l4g-E3-Ngc">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l4g-E3-Ngc">
+                                <rect key="frame" x="0.0" y="20" width="320" height="183"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.74157742070243193" green="1" blue="0.61604866062244334" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x2V-ZU-536">
+                                <rect key="frame" x="0.0" y="203" width="320" height="182"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.93648626111187683" blue="0.7540978691433482" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UOL-as-gM9">
+                                <rect key="frame" x="0.0" y="385" width="320" height="183"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="0.71514686535080896" blue="0.78741891171925837" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="UOL-as-gM9" secondAttribute="trailing" id="FMG-1o-tfC"/>
+                            <constraint firstItem="UOL-as-gM9" firstAttribute="height" secondItem="x2V-ZU-536" secondAttribute="height" id="GoJ-P1-2At"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="UOL-as-gM9" secondAttribute="bottom" id="NJS-e5-WOs"/>
+                            <constraint firstItem="x2V-ZU-536" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="WGB-pW-iV9"/>
+                            <constraint firstItem="UOL-as-gM9" firstAttribute="height" secondItem="l4g-E3-Ngc" secondAttribute="height" id="adD-E6-dcR"/>
+                            <constraint firstAttribute="trailing" secondItem="x2V-ZU-536" secondAttribute="trailing" id="bfl-wj-arT"/>
+                            <constraint firstItem="l4g-E3-Ngc" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="hsh-rs-YUD"/>
+                            <constraint firstAttribute="trailing" secondItem="l4g-E3-Ngc" secondAttribute="trailing" id="lg9-I3-QdD"/>
+                            <constraint firstItem="UOL-as-gM9" firstAttribute="top" secondItem="x2V-ZU-536" secondAttribute="bottom" id="pkj-CW-FTM"/>
+                            <constraint firstItem="x2V-ZU-536" firstAttribute="top" secondItem="l4g-E3-Ngc" secondAttribute="bottom" id="pq0-8j-RzY"/>
+                            <constraint firstItem="l4g-E3-Ngc" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="qBV-5f-kBw"/>
+                            <constraint firstItem="UOL-as-gM9" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="qdp-fl-qve"/>
+                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="textView" destination="l4g-E3-Ngc" id="sph-g9-XKa"/>
+                        <outlet property="textViewBlock" destination="l4g-E3-Ngc" id="mWh-fh-oWx"/>
+                        <outlet property="textViewGet" destination="x2V-ZU-536" id="s0i-vx-InI"/>
+                        <outlet property="textViewPost" destination="UOL-as-gM9" id="Xfn-Ig-mrv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

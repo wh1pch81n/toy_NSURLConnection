@@ -12,9 +12,12 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
 
 @interface ViewController ()
 
-@property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (strong, nonatomic) NSMutableData *responseData; //this will hold the response data when the request finally returns
+@property (weak, nonatomic) IBOutlet UITextView *textViewBlock;
+@property (weak, nonatomic) IBOutlet UITextView *textViewGet;
+@property (weak, nonatomic) IBOutlet UITextView *textViewPost;
 
+@property (strong, nonatomic) NSMutableData *responseDataGet, *responseDataPost; //this will hold the response data when the request finally returns
+@property (strong, nonatomic) NSURLConnection *postConnection, *getConnection;
 @end
 
 @implementation ViewController
@@ -23,9 +26,12 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    //[self postData];
-//    [self getData];
+    NSLog(@"Do block");
     [self block];
+    NSLog(@"Do GET");
+    [self getData];
+    NSLog(@"DO POST");
+    [self postData];
 }
 
 - (void)block {
@@ -36,7 +42,11 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
             NSLog(@"Error: %@", connectionError);
             return;
         }
-        NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.textViewBlock.text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        });
+        
+        //NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     }];
 }
 
@@ -45,17 +55,18 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kUrlToRequest]];
     
     //create url connection and fire request
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    
-
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    [conn setDelegateQueue:[NSOperationQueue new]];
+    self.getConnection = conn;
+    [conn start];
 }
 
 - (void)postData {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://google.com"]];
     
     //specify that it will be a post request
-    request.HTTPBody = @"POST";
-    
+    //request.HTTPBody = @"POST";
+    request.HTTPMethod = @"POST";
     //This is how we set header fields
     [request setValue:@"application/xml; charset=utf-8"
    forHTTPHeaderField:@"Content-Type"];
@@ -66,7 +77,10 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
     request.HTTPBody = requestBodyData;
     
     //Create url connection and fire
-    [NSURLConnection connectionWithRequest:request delegate:self];
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    [conn setDelegateQueue:[NSOperationQueue new]];
+    self.postConnection = conn;
+    [conn start];
 }
 
 - (void)didReceiveMemoryWarning
@@ -79,11 +93,25 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     /*The response has been recieved.  This is a good time to initialize the nsmutabledata variable we made*/
-    self.responseData = [NSMutableData new];
+    if (connection == self.getConnection) {
+        self.responseDataGet = [NSMutableData new];
+    } else if (connection == self.postConnection) {
+        self.responseDataPost = [NSMutableData new];
+    } else {
+        NSLog(@"Problem with didRecieveResponse.  connections do not match");
+        abort();
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [_responseData appendData:data];
+    if (connection == self.getConnection) {
+        [self.responseDataGet appendData:data];
+    } else if (connection == self.postConnection) {
+        [self.responseDataPost appendData:data];
+    } else {
+        NSLog(@"Problem with didRecievedata.  connections do not match");
+        abort();
+    }
 }
 
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
@@ -92,10 +120,17 @@ NSString *const kUrlToRequest = @"https://raw.githubusercontent.com/wh1pch81n/To
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     /*The request is complete and data has been recieved.  You can now parse the responseData now*/
-    //NSLog(@"%@", self.responseData);
-    NSString *str = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-    //NSLog(@"%@", str);
-    [self.textView setText:str];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (connection == self.getConnection) {
+            self.textViewGet.text = [[NSString alloc] initWithData:self.responseDataGet encoding:NSUTF8StringEncoding];
+        } else if (connection == self.postConnection) {
+            self.textViewPost.text = [[NSString alloc] initWithData:self.responseDataPost encoding:NSUTF8StringEncoding];
+        } else {
+            NSLog(@"Problem with didfinishloading.  connections do not match");
+            abort();
+        }
+        
+    });
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
